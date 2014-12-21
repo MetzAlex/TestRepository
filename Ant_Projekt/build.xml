@@ -1,0 +1,56 @@
+<project name="Ant_Projekt" default="all" basedir=".">
+	
+	<!-- Setzt die Variablen, die dann genutzt werden können -->  
+	<property name="obj-dir" location="obj" />
+	<property name="lib-dir" location="lib" />
+	<property name="src-dir" location="src" />
+	<!-- Der Wert einer Property wird mit ${} aufgerufen -->
+	
+	<!-- Erstellt die Verzeichnisse obj.dir und lib.dir --> 
+	<target name="init">
+		<mkdir dir="${obj-dir}" />
+		<mkdir dir="${lib-dir}" />
+	</target>
+
+	<!-- Löscht die vorhandenen obj.dir und lib.dir --> 
+	<target name="clean-init">
+		<delete dir="${obj-dir}" />
+		<delete dir="${lib-dir}" />
+	</target>
+
+	<!-- Kompliert den Java-Code -->
+	<target name="compile" depends="init">
+		<javac srcdir="${src-dir}" destdir="${obj-dir}" />
+	</target>
+
+	<!-- Löscht das vorhandene obj.dir einschließlich aller .class Dateien -->
+	<target name="clean-compile">
+		<delete>
+			<fileset dir="${obj-dir}" includes="**/*.class" />
+		</delete>
+	</target>
+
+	<!-- Erstellt die Jar-File "hello" im Verzeichnis lib.dir -->
+	<target name="jar" depends="compile">
+		<jar destfile="${lib-dir}/hello.jar" basedir="${obj-dir}" />
+	</target>
+
+	<!-- Löscht die Jar-File "hello" im Verzeichnis lib.dir -->
+	<target name="clean-jar">
+		<delete file="${lib-dir}/hello.jar" />
+	</target>
+
+	<!-- Führt die Jar-File "hello" im Verzeichnis lib.dir aus -->
+	<target name="run" depends="jar">
+		<java classname="hello" fork="true"> 
+			<classpath path="${lib-dir}/hello.jar" />
+		</java>
+	</target>
+
+	<!-- "all" ist der default des Projekts und führt die targets zur Erstellung aus -->
+	<target name="all" depends="run"/>
+
+	<!-- "clean" führt die targets zum Löschen aus -->
+	<target name="clean" depends="clean-init"/>
+	
+</project>
